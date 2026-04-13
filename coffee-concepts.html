@@ -1,0 +1,1226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Coffee & Concepts — Study Together</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0e0c0a;
+    --bg2: #161310;
+    --bg3: #1e1a16;
+    --card: #221e19;
+    --card2: #2a2520;
+    --border: rgba(255,220,150,0.08);
+    --border2: rgba(255,220,150,0.15);
+    --gold: #c9933a;
+    --gold2: #e8b56a;
+    --cream: #f5ead8;
+    --muted: #7a6e62;
+    --muted2: #9a8e82;
+    --green: #4a8c5c;
+    --green2: #5dab72;
+    --red: #8c4040;
+    --red2: #b05050;
+    --blue: #3a5c8c;
+    --blue2: #4e78b5;
+    --radius: 14px;
+    --radius-sm: 8px;
+    --shadow: 0 4px 24px rgba(0,0,0,0.4);
+    --font-head: 'Playfair Display', Georgia, serif;
+    --font-body: 'DM Sans', sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: var(--font-body);
+    background: var(--bg);
+    color: var(--cream);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── SCREENS ── */
+  .screen { display: none; min-height: 100vh; }
+  .screen.active { display: flex; flex-direction: column; }
+
+  /* ── LANDING ── */
+  #screen-landing {
+    background: var(--bg);
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .landing-bg {
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 30% 20%, rgba(201,147,58,0.07) 0%, transparent 55%),
+                radial-gradient(ellipse at 75% 80%, rgba(74,140,92,0.05) 0%, transparent 50%);
+    pointer-events: none;
+  }
+  .landing-content { position: relative; z-index: 1; max-width: 540px; padding: 2rem; }
+  .logo-mark {
+    width: 72px; height: 72px; margin: 0 auto 1.5rem;
+    background: var(--card2);
+    border: 1px solid var(--border2);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 32px;
+    animation: float 4s ease-in-out infinite;
+  }
+  @keyframes float {
+    0%,100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+  }
+  .landing-title {
+    font-family: var(--font-head);
+    font-size: 3rem;
+    font-weight: 600;
+    color: var(--cream);
+    line-height: 1.1;
+    margin-bottom: 0.5rem;
+  }
+  .landing-title span { color: var(--gold2); }
+  .landing-sub { color: var(--muted2); font-size: 1rem; font-weight: 300; margin-bottom: 2.5rem; line-height: 1.6; }
+  .landing-btns { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 0.7rem 1.6rem;
+    border-radius: var(--radius-sm);
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: 1px solid transparent;
+  }
+  .btn-primary {
+    background: var(--gold);
+    color: #1a1208;
+    border-color: var(--gold);
+  }
+  .btn-primary:hover { background: var(--gold2); border-color: var(--gold2); transform: translateY(-1px); }
+  .btn-ghost {
+    background: transparent;
+    color: var(--cream);
+    border-color: var(--border2);
+  }
+  .btn-ghost:hover { background: var(--card2); border-color: var(--gold); color: var(--gold2); }
+  .btn-sm { padding: 0.45rem 1rem; font-size: 0.82rem; }
+  .btn-icon { padding: 0.5rem; min-width: 36px; justify-content: center; }
+  .landing-stats {
+    display: flex; gap: 2rem; justify-content: center;
+    margin-top: 2.5rem; padding-top: 2rem;
+    border-top: 1px solid var(--border);
+  }
+  .landing-stat { text-align: center; }
+  .landing-stat-num { font-family: var(--font-head); font-size: 1.6rem; color: var(--gold2); display: block; }
+  .landing-stat-label { font-size: 0.78rem; color: var(--muted); }
+
+  /* ── LOBBY ── */
+  #screen-lobby { background: var(--bg); }
+  .lobby-header {
+    padding: 1.2rem 2rem;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+    background: var(--bg2);
+  }
+  .lobby-logo { font-family: var(--font-head); font-size: 1.3rem; color: var(--gold2); display: flex; align-items: center; gap: 8px; }
+  .lobby-logo span { font-size: 20px; }
+  .lobby-body { flex: 1; padding: 2rem; max-width: 1100px; margin: 0 auto; width: 100%; }
+  .lobby-section-title {
+    font-family: var(--font-head);
+    font-size: 1.5rem;
+    color: var(--cream);
+    margin-bottom: 1.5rem;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .lobby-section-title::after { content:''; flex:1; height:1px; background: var(--border); }
+  .room-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; margin-bottom: 2.5rem; }
+  .room-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.25rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+  .room-card:hover { border-color: var(--border2); transform: translateY(-2px); box-shadow: var(--shadow); }
+  .room-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    border-radius: var(--radius) var(--radius) 0 0;
+  }
+  .room-card.neutral::before { background: var(--gold); }
+  .room-card.female::before { background: #c86e8a; }
+  .room-card.male::before { background: var(--blue2); }
+  .room-card-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 1rem; }
+  .room-name { font-family: var(--font-head); font-size: 1.1rem; color: var(--cream); }
+  .room-badge {
+    font-size: 0.72rem; padding: 2px 8px;
+    border-radius: 20px;
+    font-weight: 500;
+  }
+  .badge-neutral { background: rgba(201,147,58,0.15); color: var(--gold2); border: 1px solid rgba(201,147,58,0.3); }
+  .badge-female { background: rgba(200,110,138,0.15); color: #e89ab5; border: 1px solid rgba(200,110,138,0.3); }
+  .badge-male { background: rgba(78,120,181,0.15); color: var(--blue2); border: 1px solid rgba(78,120,181,0.3); }
+  .badge-green { background: rgba(74,140,92,0.15); color: var(--green2); border: 1px solid rgba(74,140,92,0.3); }
+  .room-theme { font-size: 0.8rem; color: var(--muted2); margin-bottom: 0.75rem; }
+  .room-meta { display: flex; align-items: center; gap: 12px; font-size: 0.8rem; color: var(--muted); }
+  .room-meta-item { display: flex; align-items: center; gap: 4px; }
+  .avatar-stack { display: flex; }
+  .avatar-mini {
+    width: 22px; height: 22px; border-radius: 50%;
+    border: 2px solid var(--card);
+    margin-left: -6px;
+    font-size: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 500;
+  }
+  .avatar-mini:first-child { margin-left: 0; }
+  .room-timer-bar { margin-top: 12px; }
+  .timer-bar-track { height: 3px; background: var(--bg3); border-radius: 2px; overflow: hidden; }
+  .timer-bar-fill { height: 100%; background: var(--gold); border-radius: 2px; transition: width 1s linear; }
+  .room-timer-label { font-size: 0.72rem; color: var(--muted); margin-top: 4px; text-align: right; }
+
+  /* ── ROOM ── */
+  #screen-room { background: var(--bg); }
+  .room-topbar {
+    padding: 0.8rem 1.5rem;
+    background: var(--bg2);
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 16px;
+  }
+  .room-topbar-left { display: flex; align-items: center; gap: 12px; flex: 1; }
+  .room-topbar-right { display: flex; align-items: center; gap: 8px; }
+  .room-topbar-name { font-family: var(--font-head); font-size: 1.1rem; color: var(--cream); }
+  .room-layout { display: flex; flex: 1; min-height: 0; height: calc(100vh - 60px); }
+  .video-area { flex: 1; padding: 1.25rem; overflow-y: auto; background: var(--bg); }
+  .video-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 12px; }
+  .video-tile {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    aspect-ratio: 4/3;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+  .video-tile.speaking { border-color: var(--green2); }
+  .video-tile.on-break { border-color: var(--gold); }
+  .video-tile-bg {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    flex-direction: column; gap: 8px;
+  }
+  .video-avatar {
+    width: 52px; height: 52px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.2rem; font-weight: 500;
+  }
+  .video-tile-name {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    padding: 4px 8px;
+    background: rgba(14,12,10,0.7);
+    font-size: 0.75rem;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .break-badge {
+    position: absolute; top: 8px; right: 8px;
+    background: rgba(201,147,58,0.85); color: #1a1208;
+    font-size: 0.65rem; font-weight: 600;
+    padding: 2px 6px; border-radius: 20px;
+  }
+  .my-tile { border-color: var(--gold) !important; }
+
+  /* side panel */
+  .side-panel {
+    width: 300px; min-width: 300px;
+    background: var(--bg2);
+    border-left: 1px solid var(--border);
+    display: flex; flex-direction: column;
+    overflow: hidden;
+  }
+  .side-tabs {
+    display: flex;
+    border-bottom: 1px solid var(--border);
+  }
+  .side-tab {
+    flex: 1; padding: 0.75rem;
+    text-align: center;
+    font-size: 0.8rem;
+    color: var(--muted2);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+  }
+  .side-tab.active { color: var(--gold2); border-bottom-color: var(--gold); }
+  .side-content { flex: 1; overflow-y: auto; padding: 1rem; }
+
+  /* timer widget */
+  .timer-widget {
+    background: var(--card2);
+    border: 1px solid var(--border2);
+    border-radius: var(--radius);
+    padding: 1.25rem;
+    text-align: center;
+    margin-bottom: 1rem;
+  }
+  .timer-mode-label { font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.5rem; }
+  .timer-display {
+    font-family: var(--font-head);
+    font-size: 2.8rem;
+    color: var(--cream);
+    letter-spacing: 2px;
+    line-height: 1;
+    margin-bottom: 0.75rem;
+  }
+  .timer-display.break-mode { color: var(--gold2); }
+  .timer-progress {
+    height: 4px; background: var(--bg3); border-radius: 2px;
+    overflow: hidden; margin-bottom: 1rem;
+  }
+  .timer-progress-fill { height: 100%; border-radius: 2px; transition: width 1s linear; }
+  .timer-progress-fill.focus { background: var(--green2); }
+  .timer-progress-fill.break { background: var(--gold2); }
+  .timer-controls { display: flex; gap: 8px; justify-content: center; }
+  .timer-btn {
+    padding: 0.45rem 1.1rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.82rem;
+    font-weight: 500;
+    cursor: pointer;
+    border: 1px solid var(--border2);
+    background: var(--card);
+    color: var(--cream);
+    transition: all 0.2s;
+    font-family: var(--font-body);
+  }
+  .timer-btn:hover { background: var(--card2); border-color: var(--gold); color: var(--gold2); }
+  .timer-btn.primary { background: var(--gold); border-color: var(--gold); color: #1a1208; }
+  .timer-btn.primary:hover { background: var(--gold2); }
+  .timer-session-counter { font-size: 0.75rem; color: var(--muted); margin-top: 0.75rem; }
+
+  /* chat */
+  .chat-messages { display: flex; flex-direction: column; gap: 8px; }
+  .chat-msg { padding: 0.6rem 0.8rem; border-radius: var(--radius-sm); font-size: 0.85rem; line-height: 1.4; }
+  .chat-msg.them { background: var(--card2); color: var(--cream); }
+  .chat-msg.me { background: rgba(201,147,58,0.15); color: var(--cream); border: 1px solid rgba(201,147,58,0.2); }
+  .chat-msg .msg-author { font-size: 0.72rem; color: var(--muted2); margin-bottom: 3px; }
+  .chat-input-row { display: flex; gap: 8px; padding: 0.75rem 1rem; border-top: 1px solid var(--border); }
+  .chat-input {
+    flex: 1; background: var(--card2); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); padding: 0.5rem 0.75rem;
+    color: var(--cream); font-family: var(--font-body); font-size: 0.85rem;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .chat-input:focus { border-color: var(--gold); }
+
+  /* buddy requests */
+  .request-card {
+    background: var(--card2); border: 1px solid var(--border2);
+    border-radius: var(--radius-sm); padding: 0.75rem;
+    display: flex; align-items: center; gap: 10px;
+    margin-bottom: 8px;
+  }
+  .request-card .avatar { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; font-weight: 500; }
+  .request-card .req-info { flex: 1; }
+  .request-card .req-name { font-size: 0.85rem; font-weight: 500; }
+  .request-card .req-sub { font-size: 0.72rem; color: var(--muted2); }
+  .request-btns { display: flex; gap: 6px; }
+  .btn-accept { background: rgba(74,140,92,0.2); border: 1px solid rgba(74,140,92,0.3); color: var(--green2); border-radius: 6px; padding: 4px 10px; font-size: 0.75rem; cursor: pointer; transition: all 0.2s; }
+  .btn-accept:hover { background: rgba(74,140,92,0.35); }
+  .btn-decline { background: rgba(140,64,64,0.15); border: 1px solid rgba(140,64,64,0.25); color: var(--red2); border-radius: 6px; padding: 4px 10px; font-size: 0.75rem; cursor: pointer; transition: all 0.2s; }
+  .btn-decline:hover { background: rgba(140,64,64,0.25); }
+
+  /* members list */
+  .member-row {
+    display: flex; align-items: center; gap: 10px;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .member-row:last-child { border-bottom: none; }
+  .member-avatar { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.78rem; font-weight: 500; flex-shrink: 0; }
+  .member-info { flex: 1; }
+  .member-name { font-size: 0.85rem; color: var(--cream); }
+  .member-status { font-size: 0.72rem; color: var(--muted2); }
+  .member-action { font-size: 0.72rem; color: var(--gold); cursor: pointer; padding: 3px 8px; border: 1px solid rgba(201,147,58,0.3); border-radius: 20px; transition: all 0.2s; }
+  .member-action:hover { background: rgba(201,147,58,0.1); }
+
+  /* settings panel */
+  .settings-section { margin-bottom: 1.25rem; }
+  .settings-label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin-bottom: 0.5rem; }
+  .theme-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .theme-option {
+    padding: 0.6rem; border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+    cursor: pointer; text-align: center;
+    font-size: 0.78rem; color: var(--muted2);
+    transition: all 0.2s;
+  }
+  .theme-option:hover, .theme-option.active { border-color: var(--gold); color: var(--gold2); background: rgba(201,147,58,0.08); }
+  .theme-option .theme-icon { font-size: 20px; display: block; margin-bottom: 4px; }
+  .sound-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+  .sound-label { font-size: 0.85rem; color: var(--cream); }
+  .toggle {
+    width: 36px; height: 20px; border-radius: 10px; background: var(--bg3);
+    border: 1px solid var(--border2); cursor: pointer;
+    position: relative; transition: background 0.2s;
+  }
+  .toggle.on { background: var(--gold); border-color: var(--gold); }
+  .toggle::after {
+    content: ''; position: absolute;
+    width: 14px; height: 14px; border-radius: 50%;
+    background: var(--cream); top: 2px; left: 2px;
+    transition: transform 0.2s;
+  }
+  .toggle.on::after { transform: translateX(16px); }
+
+  /* notification */
+  .notif {
+    position: fixed; bottom: 1.5rem; right: 1.5rem;
+    background: var(--card2); border: 1px solid var(--border2);
+    border-radius: var(--radius); padding: 1rem 1.25rem;
+    box-shadow: var(--shadow);
+    z-index: 1000; max-width: 300px;
+    animation: slideIn 0.3s ease;
+    display: none;
+  }
+  .notif.show { display: block; }
+  @keyframes slideIn { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+  .notif-title { font-size: 0.85rem; font-weight: 500; color: var(--cream); margin-bottom: 0.25rem; }
+  .notif-body { font-size: 0.78rem; color: var(--muted2); margin-bottom: 0.75rem; }
+  .notif-actions { display: flex; gap: 8px; }
+
+  /* stats panel */
+  .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 1.25rem; }
+  .stat-card {
+    background: var(--card2); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); padding: 0.75rem;
+    text-align: center;
+  }
+  .stat-num { font-family: var(--font-head); font-size: 1.6rem; color: var(--gold2); line-height: 1; }
+  .stat-label { font-size: 0.7rem; color: var(--muted); margin-top: 4px; }
+  .streak-display { display: flex; align-items: center; gap: 8px; padding: 0.75rem; background: var(--card2); border: 1px solid var(--border); border-radius: var(--radius-sm); margin-bottom: 1rem; }
+  .streak-fire { font-size: 24px; }
+  .streak-count { font-family: var(--font-head); font-size: 1.4rem; color: var(--gold2); }
+  .streak-label { font-size: 0.75rem; color: var(--muted2); }
+
+  /* weather */
+  .weather-widget {
+    background: var(--card2); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); padding: 0.75rem;
+    margin-bottom: 1rem; text-align: center;
+  }
+  .weather-icon { font-size: 2rem; margin-bottom: 0.25rem; }
+  .weather-temp { font-family: var(--font-head); font-size: 1.5rem; color: var(--cream); }
+  .weather-desc { font-size: 0.75rem; color: var(--muted2); }
+
+  /* leaderboard */
+  .lb-row {
+    display: flex; align-items: center; gap: 10px;
+    padding: 0.5rem 0; border-bottom: 1px solid var(--border);
+    font-size: 0.85rem;
+  }
+  .lb-rank { width: 20px; text-align: center; color: var(--muted); font-size: 0.75rem; font-weight: 500; }
+  .lb-rank.gold { color: var(--gold2); }
+  .lb-rank.silver { color: var(--muted2); }
+  .lb-rank.bronze { color: #a06040; }
+  .lb-name { flex: 1; color: var(--cream); }
+  .lb-time { color: var(--gold); font-weight: 500; }
+
+  /* end-of-session modal */
+  .modal-overlay {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.7);
+    z-index: 900;
+    display: flex; align-items: center; justify-content: center;
+    display: none;
+  }
+  .modal-overlay.show { display: flex; }
+  .modal {
+    background: var(--card); border: 1px solid var(--border2);
+    border-radius: var(--radius); padding: 2rem;
+    max-width: 400px; width: 90%; text-align: center;
+    animation: modalIn 0.3s ease;
+  }
+  @keyframes modalIn { from { transform: scale(0.95); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+  .modal-icon { font-size: 3rem; margin-bottom: 1rem; }
+  .modal-title { font-family: var(--font-head); font-size: 1.5rem; color: var(--cream); margin-bottom: 0.5rem; }
+  .modal-body { color: var(--muted2); font-size: 0.9rem; margin-bottom: 1.5rem; line-height: 1.6; }
+  .modal-stats { display: flex; justify-content: center; gap: 2rem; margin-bottom: 1.5rem; }
+  .modal-stat { text-align: center; }
+  .modal-stat-num { font-family: var(--font-head); font-size: 1.8rem; color: var(--gold2); display: block; }
+  .modal-stat-label { font-size: 0.75rem; color: var(--muted); }
+  .modal-btns { display: flex; gap: 10px; justify-content: center; }
+
+  /* custom scrollbar */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
+
+  /* ambient bg themes */
+  body.theme-cafe { --bg: #100d08; --bg2: #170f09; --bg3: #1f1509; }
+  body.theme-night { --bg: #080a12; --bg2: #0c0e18; --bg3: #121520; --gold: #7e9fd4; --gold2: #a0bfee; }
+  body.theme-minimal { --bg: #111111; --bg2: #161616; --bg3: #1c1c1c; --gold: #b0b0b0; --gold2: #d8d8d8; }
+  body.theme-forest { --bg: #080e0a; --bg2: #0c130e; --bg3: #111a12; --gold: #5a9e6a; --gold2: #7dc48e; }
+  .create-room-form { display: grid; gap: 12px; }
+  .form-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+  .field { display: flex; flex-direction: column; gap: 6px; }
+  .field label {
+    font-size: 0.72rem;
+    color: var(--muted2);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  .field input,
+  .field select {
+    width: 100%;
+    background: var(--card2);
+    color: var(--cream);
+    border: 1px solid var(--border2);
+    border-radius: var(--radius-sm);
+    padding: 0.75rem 0.85rem;
+    font-family: var(--font-body);
+  }
+  .field input:focus,
+  .field select:focus {
+    outline: none;
+    border-color: var(--gold);
+    box-shadow: 0 0 0 2px rgba(201,147,58,0.15);
+  }
+  .modal-note {
+    font-size: 0.78rem;
+    color: var(--muted2);
+    line-height: 1.5;
+    background: var(--card2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 0.85rem;
+  }
+  .status-note {
+    margin-top: 0.75rem;
+    font-size: 0.74rem;
+    color: var(--muted2);
+  }
+  .video-stream {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .video-placeholder,
+  .video-more {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .video-more-count {
+    font-family: var(--font-head);
+    font-size: 2rem;
+    color: var(--gold2);
+  }
+  .hidden { display: none !important; }
+  @media (max-width: 640px) {
+    .form-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══════════════ LANDING ══════════════ -->
+<div id="screen-landing" class="screen active">
+  <div class="landing-bg"></div>
+  <div class="landing-content">
+    <div class="logo-mark">☕</div>
+    <h1 class="landing-title">Coffee &amp; <span>Concepts</span></h1>
+    <p class="landing-sub">A virtual study café where accountability meets community. Cameras on, focus locked, goals met — together.</p>
+    <div class="landing-btns">
+      <button class="btn btn-primary" onclick="showLobby()">Browse Rooms</button>
+      <button class="btn btn-ghost" onclick="openCreateRoom()">Create a Room</button>
+    </div>
+    <div class="landing-stats">
+      <div class="landing-stat">
+        <span class="landing-stat-num" id="live-count">247</span>
+        <span class="landing-stat-label">studying now</span>
+      </div>
+      <div class="landing-stat">
+        <span class="landing-stat-num" id="active-room-count">18</span>
+        <span class="landing-stat-label">active rooms</span>
+      </div>
+      <div class="landing-stat">
+        <span class="landing-stat-num" id="weekly-hours-total">4.2k</span>
+        <span class="landing-stat-label">hrs this week</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ LOBBY ══════════════ -->
+<div id="screen-lobby" class="screen">
+  <div class="lobby-header">
+    <div class="lobby-logo"><span>☕</span> Coffee &amp; Concepts</div>
+    <div style="display:flex;gap:10px;align-items:center;">
+      <button class="btn btn-primary btn-sm" onclick="openCreateRoom()">+ Create Room</button>
+      <button class="btn btn-ghost btn-sm" onclick="showDashboard()">📊 Dashboard</button>
+      <div style="width:32px;height:32px;border-radius:50%;background:var(--card2);border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:14px;">👤</div>
+    </div>
+  </div>
+  <div class="lobby-body">
+    <div class="lobby-section-title">Available Rooms</div>
+    <div class="room-grid" id="room-grid"></div>
+    <div class="lobby-section-title">Leaderboard</div>
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1rem;max-width:480px;" id="lb-list"></div>
+  </div>
+</div>
+
+<!-- ══════════════ CREATE ROOM MODAL ══════════════ -->
+<div class="modal-overlay" id="create-room-modal">
+  <div class="modal" style="max-width:560px;text-align:left;">
+    <div class="modal-icon">☕</div>
+    <div class="modal-title">Create a Study Room</div>
+    <div class="modal-body">Spin up a new room with your own vibe, session length, and study focus.</div>
+    <form id="create-room-form" class="create-room-form">
+      <div class="form-grid">
+        <div class="field">
+          <label for="room-name-input">Room name</label>
+          <input id="room-name-input" name="name" maxlength="40" placeholder="Midnight Revision Club" required>
+        </div>
+        <div class="field">
+          <label for="room-subject-input">Study focus</label>
+          <input id="room-subject-input" name="subject" maxlength="40" placeholder="Exam Prep" required>
+        </div>
+        <div class="field">
+          <label for="room-type-input">Room type</label>
+          <select id="room-type-input" name="type">
+            <option value="neutral">All welcome</option>
+            <option value="female">Women only</option>
+            <option value="male">Men only</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="room-theme-input">Theme</label>
+          <select id="room-theme-input" name="theme">
+            <option value="Dark Mode">Dark Mode</option>
+            <option value="Cafe Ambient">Cafe Ambient</option>
+            <option value="Night Owl">Night Owl</option>
+            <option value="Forest Focus">Forest Focus</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="room-duration-input">Room duration</label>
+          <select id="room-duration-input" name="duration">
+            <option value="60">60 minutes</option>
+            <option value="90">90 minutes</option>
+            <option value="120">120 minutes</option>
+            <option value="180" selected>180 minutes</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="room-cap-input">Capacity</label>
+          <select id="room-cap-input" name="cap">
+            <option value="20">20 seats</option>
+            <option value="30">30 seats</option>
+            <option value="40" selected>40 seats</option>
+            <option value="50">50 seats</option>
+          </select>
+        </div>
+      </div>
+      <div class="modal-note">New rooms start with a couple of ambient members so the cafe feels alive right away, and you will join automatically after creation.</div>
+      <div class="modal-btns" style="justify-content:flex-end;">
+        <button class="btn btn-ghost" type="button" onclick="closeCreateRoom()">Cancel</button>
+        <button class="btn btn-primary" type="submit">Create &amp; Join</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ══════════════ ROOM ══════════════ -->
+<div id="screen-room" class="screen">
+  <div class="room-topbar">
+    <div class="room-topbar-left">
+      <button class="btn btn-ghost btn-sm" onclick="leaveRoom()">← Leave</button>
+      <span class="room-topbar-name" id="room-topbar-name"></span>
+      <span class="room-badge" id="room-topbar-badge"></span>
+    </div>
+    <div class="room-topbar-right">
+      <button class="btn btn-ghost btn-sm btn-icon" id="mic-btn" onclick="toggleMic()" title="Mute/Unmute">🎙</button>
+      <button class="btn btn-ghost btn-sm btn-icon" id="cam-btn" onclick="toggleCam()" title="Camera">📷</button>
+      <button class="btn btn-ghost btn-sm" onclick="startBreak()" id="break-btn">☕ Break</button>
+    </div>
+  </div>
+
+  <div class="room-layout">
+    <div class="video-area">
+      <div class="video-grid" id="video-grid"></div>
+    </div>
+
+    <div class="side-panel">
+      <div class="side-tabs">
+        <div class="side-tab active" onclick="switchTab('timer',this)">⏱ Timer</div>
+        <div class="side-tab" onclick="switchTab('members',this)">👥 Members</div>
+        <div class="side-tab" onclick="switchTab('chat',this)">💬 Chat</div>
+        <div class="side-tab" onclick="switchTab('settings',this)">⚙ Settings</div>
+      </div>
+
+      <!-- TIMER TAB -->
+      <div id="tab-timer" class="side-content">
+        <div class="timer-widget">
+          <div class="timer-mode-label" id="timer-mode-label">Focus Session</div>
+          <div class="timer-display" id="timer-display">25:00</div>
+          <div class="timer-progress">
+            <div class="timer-progress-fill focus" id="timer-progress-fill" style="width:100%"></div>
+          </div>
+          <div class="timer-controls">
+            <button class="timer-btn primary" id="timer-start-btn" onclick="toggleTimer()">Start</button>
+            <button class="timer-btn" onclick="resetTimer()">Reset</button>
+          </div>
+          <div class="timer-session-counter" id="session-counter">Session 1 of 4</div>
+        </div>
+        <div class="weather-widget" id="weather-widget">
+          <div class="weather-icon" id="weather-icon">🌤</div>
+          <div class="weather-temp" id="weather-temp">—°C</div>
+          <div class="weather-desc" id="weather-desc">Loading weather…</div>
+          <div style="font-size:0.7rem;color:var(--muted);margin-top:4px;">📍 <span id="weather-city">Detecting location…</span></div>
+        </div>
+        <div style="background:var(--card2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:0.75rem;">
+          <div style="font-size:0.72rem;color:var(--muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:.08em;">Room Timer</div>
+          <div style="display:flex;align-items:center;justify-content:space-between;font-size:0.85rem;">
+            <span id="room-time-left">2h 45m left</span>
+            <button class="btn btn-ghost btn-sm" onclick="voteExtend()">Vote Extend</button>
+          </div>
+          <div class="timer-bar-track" style="margin-top:8px;">
+            <div class="timer-bar-fill" id="room-time-fill" style="width:91%"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- MEMBERS TAB -->
+      <div id="tab-members" class="side-content" style="display:none;">
+        <div style="font-size:0.78rem;color:var(--muted2);margin-bottom:0.75rem;" id="members-count"></div>
+        <div id="members-list"></div>
+      </div>
+
+      <!-- CHAT TAB -->
+      <div id="tab-chat" class="side-content" style="display:none;padding-bottom:0;">
+        <div class="chat-messages" id="chat-messages" style="min-height:200px;"></div>
+      </div>
+
+      <!-- SETTINGS TAB -->
+      <div id="tab-settings" class="side-content" style="display:none;">
+        <div class="settings-section">
+          <div class="settings-label">Room Theme</div>
+          <div class="theme-grid">
+            <div class="theme-option active" onclick="setTheme('default',this)"><span class="theme-icon">🌑</span>Dark</div>
+            <div class="theme-option" onclick="setTheme('cafe',this)"><span class="theme-icon">☕</span>Café</div>
+            <div class="theme-option" onclick="setTheme('night',this)"><span class="theme-icon">🌙</span>Night Owl</div>
+            <div class="theme-option" onclick="setTheme('forest',this)"><span class="theme-icon">🌿</span>Forest</div>
+          </div>
+        </div>
+        <div class="settings-section">
+          <div class="settings-label">Ambient Sounds</div>
+          <div class="sound-row"><span class="sound-label">Lo-fi beats</span><div class="toggle on" id="t-lofi" onclick="toggleSound('lofi', this)"></div></div>
+          <div class="sound-row"><span class="sound-label">Rain sounds</span><div class="toggle" id="t-rain" onclick="toggleSound('rain', this)"></div></div>
+          <div class="sound-row"><span class="sound-label">Café chatter</span><div class="toggle" id="t-cafe" onclick="toggleSound('cafe', this)"></div></div>
+        </div>
+        <div class="settings-section">
+          <div class="settings-label">Focus Mode</div>
+          <div class="sound-row"><span class="sound-label">Camera required</span><div class="toggle on" id="focus-camera-required" onclick="toggleFocusSetting('cameraRequired', this)"></div></div>
+          <div class="sound-row"><span class="sound-label">Break reminders</span><div class="toggle on" id="focus-break-reminders" onclick="toggleFocusSetting('breakReminders', this)"></div></div>
+          <div class="sound-row"><span class="sound-label">Session summary</span><div class="toggle on" id="focus-session-summary" onclick="toggleFocusSetting('sessionSummary', this)"></div></div>
+        </div>
+        <div class="settings-section">
+          <div class="settings-label">Pomodoro Length</div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <button class="timer-btn active" id="pom-25" onclick="setPomLength(25,this)" style="padding:4px 12px;font-size:0.78rem;">25 min</button>
+            <button class="timer-btn" id="pom-50" onclick="setPomLength(50,this)" style="padding:4px 12px;font-size:0.78rem;">50 min</button>
+            <button class="timer-btn" id="pom-90" onclick="setPomLength(90,this)" style="padding:4px 12px;font-size:0.78rem;">90 min</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Chat input only shows on chat tab -->
+      <div id="chat-input-area" style="display:none;">
+        <div class="chat-input-row">
+          <input class="chat-input" id="chat-input" placeholder="Message the room…" onkeydown="if(event.key==='Enter')sendMsg()">
+          <button class="timer-btn primary" onclick="sendMsg()" style="padding:6px 12px;">→</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ DASHBOARD MODAL ══════════════ -->
+<div class="modal-overlay" id="dashboard-modal">
+  <div class="modal" style="max-width:460px;">
+    <div class="modal-icon">📊</div>
+    <div class="modal-title">Your Dashboard</div>
+    <div class="streak-display" style="margin-bottom:1rem;">
+      <span class="streak-fire">🔥</span>
+      <div>
+        <div class="streak-count" id="dash-streak">7</div>
+        <div class="streak-label">day streak — keep it up!</div>
+      </div>
+    </div>
+    <div class="stats-grid">
+      <div class="stat-card"><div class="stat-num" id="dash-total">48h</div><div class="stat-label">Total studied</div></div>
+      <div class="stat-card"><div class="stat-num" id="dash-today">1h 20m</div><div class="stat-label">Today</div></div>
+      <div class="stat-card"><div class="stat-num" id="dash-sessions">12</div><div class="stat-label">Sessions</div></div>
+      <div class="stat-card"><div class="stat-num" id="dash-focus-score">94</div><div class="stat-label">Focus score</div></div>
+    </div>
+    <div style="background:var(--card2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:0.75rem;margin-bottom:1rem;">
+      <div style="font-size:0.72rem;color:var(--muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:.08em;">This Week</div>
+      <div id="week-bars" style="display:flex;align-items:flex-end;gap:6px;height:60px;"></div>
+      <div style="display:flex;justify-content:space-between;font-size:0.65rem;color:var(--muted);margin-top:4px;">
+        <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
+      </div>
+    </div>
+    <button class="btn btn-ghost" style="width:100%;" onclick="closeDashboard()">Close</button>
+  </div>
+</div>
+
+<!-- ══════════════ SESSION END MODAL ══════════════ -->
+<div class="modal-overlay" id="end-modal">
+  <div class="modal">
+    <div class="modal-icon">🎉</div>
+    <div class="modal-title">Session Complete!</div>
+    <div class="modal-body">Great work! You crushed another focus session. Your streak continues.</div>
+    <div class="modal-stats">
+      <div class="modal-stat"><span class="modal-stat-num" id="end-time">25</span><span class="modal-stat-label">minutes</span></div>
+      <div class="modal-stat"><span class="modal-stat-num" id="end-sessions">1</span><span class="modal-stat-label">sessions</span></div>
+      <div class="modal-stat"><span class="modal-stat-num">🔥</span><span class="modal-stat-label">streak</span></div>
+    </div>
+    <div class="modal-btns">
+      <button class="btn btn-primary" onclick="nextSession()">Next Session</button>
+      <button class="btn btn-ghost" onclick="leaveRoom()">Leave Room</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ BREAK MODAL ══════════════ -->
+<div class="modal-overlay" id="break-modal">
+  <div class="modal">
+    <div class="modal-icon">☕</div>
+    <div class="modal-title">Coffee Break!</div>
+    <div class="modal-body">Step away and recharge. You'll be shown as "On Break" to your room. Back in:</div>
+    <div style="font-family:var(--font-head);font-size:3rem;color:var(--gold2);margin:0.5rem 0 1.5rem;" id="break-countdown">05:00</div>
+    <div class="timer-progress" style="margin-bottom:1.5rem;">
+      <div class="timer-progress-fill break" id="break-progress" style="width:100%"></div>
+    </div>
+    <button class="btn btn-ghost" onclick="endBreakEarly()">Back to Focus</button>
+  </div>
+</div>
+
+<!-- ══════════════ BUDDY REQUEST NOTIF ══════════════ -->
+<div class="notif" id="buddy-notif">
+  <div class="notif-title" id="notif-title">Study Buddy Request</div>
+  <div class="notif-body" id="notif-body">Someone wants to study with you!</div>
+  <div class="notif-actions">
+    <button class="btn-accept" onclick="acceptBuddy()">Accept</button>
+    <button class="btn-decline" onclick="declineBuddy()">Decline</button>
+  </div>
+</div>
+
+<!-- ══════════════ EXTEND VOTE NOTIF ══════════════ -->
+<div class="notif" id="extend-notif" style="bottom:5rem;">
+  <div class="notif-title">Extend Room?</div>
+  <div class="notif-body">3 people voted to extend the session by 30 minutes.</div>
+  <div class="notif-actions">
+    <button class="btn-accept" onclick="respondExtendVote(true)">Yes, extend</button>
+    <button class="btn-decline" onclick="respondExtendVote(false)">No thanks</button>
+  </div>
+</div>
+
+<script type="text/plain" id="legacy-prototype-script">
+// ─── DATA ───
+const ROOMS = [
+  { id:1, name:'Quiet Library', type:'neutral', theme:'Dark Mode', members:23, cap:40, subjectIcon:'📚', subject:'General Study', timeLeft:165, timeTotal:180 },
+  { id:2, name:'Lavender Lounge', type:'female', theme:'Café Ambient', members:14, cap:40, subjectIcon:'💜', subject:'Exam Prep', timeLeft:95, timeTotal:120 },
+  { id:3, name:'Deep Work Den', type:'male', theme:'Minimalist', members:8, cap:40, subjectIcon:'💻', subject:'Coding', timeLeft:42, timeTotal:60 },
+  { id:4, name:'Dawn Desk', type:'neutral', theme:'Night Owl', members:31, cap:50, subjectIcon:'🌅', subject:'Productivity', timeLeft:110, timeTotal:120 },
+  { id:5, name:'Bloom Room', type:'female', theme:'Café Ambient', members:19, cap:40, subjectIcon:'🌸', subject:'Language Learning', timeLeft:78, timeTotal:90 },
+  { id:6, name:'The Grind', type:'neutral', theme:'Dark Mode', members:38, cap:40, subjectIcon:'⚡', subject:'Deep Work', timeLeft:140, timeTotal:180 },
+];
+
+const MEMBERS = [
+  { name:'Alex K.', initials:'AK', color:'#c9933a', bg:'rgba(201,147,58,0.2)', status:'Focusing', subject:'Math' },
+  { name:'Priya S.', initials:'PS', color:'#c86e8a', bg:'rgba(200,110,138,0.2)', status:'On Break', subject:'Biology', onBreak:true },
+  { name:'Omar R.', initials:'OR', color:'#4e78b5', bg:'rgba(78,120,181,0.2)', status:'Focusing', subject:'CS' },
+  { name:'Yuki T.', initials:'YT', color:'#5dab72', bg:'rgba(93,171,114,0.2)', status:'Focusing', subject:'Japanese' },
+  { name:'Sam L.', initials:'SL', color:'#9a8e82', bg:'rgba(154,142,130,0.2)', status:'Focusing', subject:'History' },
+  { name:'Mei C.', initials:'MC', color:'#a0bfee', bg:'rgba(160,191,238,0.2)', status:'Focusing', subject:'Design' },
+];
+
+const LB_DATA = [
+  { rank:1, name:'Emma W.', time:'24h 30m' },
+  { rank:2, name:'Raj P.', time:'22h 10m' },
+  { rank:3, name:'Yuki T.', time:'19h 50m' },
+  { rank:4, name:'Alex K.', time:'17h 20m' },
+  { rank:5, name:'You', time:'14h 40m', isYou:true },
+  { rank:6, name:'Sam L.', time:'12h 05m' },
+];
+
+const WEEK_HOURS = [2.5, 4, 3, 5.5, 6, 1.5, 0.5];
+const MESSAGES_INIT = [
+  { author:'Priya S.', text:'Good luck everyone! Let\'s crush it 💪', me:false },
+  { author:'Omar R.', text:'On session 3 today, so focused!', me:false },
+];
+
+// ─── STATE ───
+let currentRoom = null;
+let timerInterval = null;
+let timerRunning = false;
+let timerSeconds = 25 * 60;
+let timerTotal = 25 * 60;
+let sessionCount = 1;
+let totalSessions = 4;
+let isBreak = false;
+let breakInterval = null;
+let breakSeconds = 5 * 60;
+let micOn = true;
+let camOn = true;
+let studiedMinutes = 0;
+
+// ─── NAVIGATION ───
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-'+id).classList.add('active');
+}
+function showLobby() {
+  renderRooms(); renderLeaderboard(); showScreen('lobby');
+}
+function showDashboard() {
+  renderWeekBars(); document.getElementById('dashboard-modal').classList.add('show');
+}
+function closeDashboard() { document.getElementById('dashboard-modal').classList.remove('show'); }
+
+// ─── LOBBY ───
+function renderRooms() {
+  const grid = document.getElementById('room-grid');
+  grid.innerHTML = ROOMS.map(r => {
+    const pct = Math.round((r.timeLeft / r.timeTotal) * 100);
+    const avatars = Array.from({length: Math.min(4, r.members)}).map((_,i) => {
+      const m = MEMBERS[i % MEMBERS.length];
+      return `<div class="avatar-mini" style="background:${m.bg};color:${m.color};">${m.initials}</div>`;
+    }).join('');
+    const badgeClass = r.type === 'neutral' ? 'badge-neutral' : r.type === 'female' ? 'badge-female' : 'badge-male';
+    const badgeText = r.type === 'neutral' ? 'All' : r.type === 'female' ? 'Women' : 'Men';
+    const mins = r.timeLeft;
+    const timeStr = mins >= 60 ? `${Math.floor(mins/60)}h ${mins%60}m` : `${mins}m`;
+    return `<div class="room-card ${r.type}" onclick="joinRoom(${r.id})">
+      <div class="room-card-header">
+        <div><div class="room-name">${r.subjectIcon} ${r.name}</div><div class="room-theme">${r.theme} · ${r.subject}</div></div>
+        <span class="room-badge ${badgeClass}">${badgeText}</span>
+      </div>
+      <div class="room-meta">
+        <div class="room-meta-item">${avatars}<span style="margin-left:6px;">${r.members}/${r.cap}</span></div>
+        <div style="flex:1;"></div>
+        <span style="font-size:0.75rem;color:var(--muted2);">${pct > 50 ? '🟢' : pct > 20 ? '🟡' : '🔴'} Active</span>
+      </div>
+      <div class="room-timer-bar">
+        <div class="timer-bar-track"><div class="timer-bar-fill" style="width:${pct}%"></div></div>
+        <div class="room-timer-label">${timeStr} remaining</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderLeaderboard() {
+  document.getElementById('lb-list').innerHTML = LB_DATA.map(r => {
+    const rankClass = r.rank===1?'gold':r.rank===2?'silver':r.rank===3?'bronze':'';
+    const rankIcon = r.rank===1?'🥇':r.rank===2?'🥈':r.rank===3?'🥉':r.rank;
+    return `<div class="lb-row">
+      <div class="lb-rank ${rankClass}">${rankIcon}</div>
+      <div class="lb-name" style="${r.isYou?'color:var(--gold2);font-weight:500;':''}">
+        ${r.name}${r.isYou?' (you)':''}
+      </div>
+      <div class="lb-time">${r.time}</div>
+    </div>`;
+  }).join('');
+}
+
+// ─── JOIN ROOM ───
+function joinRoom(id) {
+  currentRoom = ROOMS.find(r => r.id === id);
+  document.getElementById('room-topbar-name').textContent = currentRoom.name;
+  const badgeClass = currentRoom.type === 'neutral' ? 'badge-neutral' : currentRoom.type === 'female' ? 'badge-female' : 'badge-male';
+  const badgeText = currentRoom.type === 'neutral' ? 'All Welcome' : currentRoom.type === 'female' ? 'Women Only' : 'Men Only';
+  const badge = document.getElementById('room-topbar-badge');
+  badge.className = 'room-badge ' + badgeClass;
+  badge.textContent = badgeText;
+  renderVideoGrid();
+  renderMembers();
+  renderMessages();
+  loadWeather();
+  showScreen('room');
+  switchTab('timer', document.querySelector('.side-tab'));
+  setTimeout(() => showBuddyNotif(), 8000);
+}
+
+function leaveRoom() {
+  clearInterval(timerInterval);
+  clearInterval(breakInterval);
+  timerRunning = false;
+  document.getElementById('end-modal').classList.remove('show');
+  document.getElementById('break-modal').classList.remove('show');
+  showLobby();
+}
+
+// ─── VIDEO GRID ───
+function renderVideoGrid() {
+  const grid = document.getElementById('video-grid');
+  const myColors = { color: '#c9933a', bg: 'rgba(201,147,58,0.2)', initials: 'ME' };
+  const tiles = [
+    { ...myColors, name: 'You', isMe: true },
+    ...MEMBERS,
+  ];
+  grid.innerHTML = tiles.map(m => {
+    const isBreakUser = m.onBreak;
+    return `<div class="video-tile${m.isMe?' my-tile':''}${isBreakUser?' on-break':''}">
+      <div class="video-tile-bg" style="background:${m.bg||'rgba(201,147,58,0.08)'}20;">
+        <div class="video-avatar" style="background:${m.bg||'rgba(201,147,58,0.15)'};color:${m.color||'#c9933a'};">
+          ${m.initials || m.name.slice(0,2)}
+        </div>
+        <div style="font-size:0.65rem;color:var(--muted2);">${m.isMe?'Camera on':'📷 On'}</div>
+      </div>
+      ${isBreakUser ? '<div class="break-badge">On Break</div>' : ''}
+      <div class="video-tile-name">
+        <span>${m.name}${m.isMe?' (you)':''}</span>
+        <span style="font-size:10px;color:var(--green2);">●</span>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ─── MEMBERS ───
+function renderMembers() {
+  const list = document.getElementById('members-list');
+  const count = document.getElementById('members-count');
+  count.textContent = `${MEMBERS.length + 1} members in this room`;
+  list.innerHTML = `<div class="member-row">
+    <div class="member-avatar" style="background:rgba(201,147,58,0.2);color:#c9933a;">ME</div>
+    <div class="member-info"><div class="member-name">You</div><div class="member-status">Focusing</div></div>
+  </div>` + MEMBERS.map(m => `
+    <div class="member-row">
+      <div class="member-avatar" style="background:${m.bg};color:${m.color};">${m.initials}</div>
+      <div class="member-info">
+        <div class="member-name">${m.name}</div>
+        <div class="member-status">${m.onBreak ? '☕ On Break' : '● ' + m.status + ' — ' + m.subject}</div>
+      </div>
+      <div class="member-action" onclick="sendBuddyReq('${m.name}')">Connect</div>
+    </div>`).join('');
+}
+
+// ─── CHAT ───
+let messages = [...MESSAGES_INIT];
+function renderMessages() {
+  const el = document.getElementById('chat-messages');
+  el.innerHTML = messages.map(m => `
+    <div class="chat-msg ${m.me?'me':'them'}">
+      ${!m.me ? `<div class="msg-author">${m.author}</div>` : ''}
+      ${m.text}
+    </div>`).join('');
+  el.scrollTop = el.scrollHeight;
+}
+function sendMsg() {
+  const inp = document.getElementById('chat-input');
+  const text = inp.value.trim();
+  if (!text) return;
+  messages.push({ author:'You', text, me:true });
+  inp.value = '';
+  renderMessages();
+  // simulate reply
+  if (Math.random() > 0.5) {
+    setTimeout(() => {
+      const rep = MEMBERS[Math.floor(Math.random() * MEMBERS.length)];
+      const replies = ['Keep going! 💪', 'Same here, grinding hard', 'Good vibes in this room', 'Almost done with my chapter!', '☕ needed'];
+      messages.push({ author: rep.name, text: replies[Math.floor(Math.random()*replies.length)], me:false });
+      renderMessages();
+    }, 1500 + Math.random()*2000);
+  }
+}
+
+// ─── TABS ───
+function switchTab(name, el) {
+  document.querySelectorAll('.side-tab').forEach(t => t.classList.remove('active'));
+  if(el) el.classList.add('active');
+  ['timer','members','chat','settings'].forEach(t => {
+    document.getElementById('tab-'+t).style.display = t===name?'':'none';
+  });
+  document.getElementById('chat-input-area').style.display = name==='chat' ? '' : 'none';
+  if (name==='chat') setTimeout(()=>{ const el=document.getElementById('chat-messages'); el.scrollTop=el.scrollHeight; },50);
+}
+
+// ─── TIMER ───
+function toggleTimer() {
+  if (timerRunning) { pauseTimer(); } else { startTimer(); }
+}
+function startTimer() {
+  timerRunning = true;
+  document.getElementById('timer-start-btn').textContent = 'Pause';
+  timerInterval = setInterval(() => {
+    timerSeconds--;
+    updateTimerDisplay();
+    if (timerSeconds <= 0) {
+      clearInterval(timerInterval);
+      timerRunning = false;
+      studiedMinutes += timerTotal / 60;
+      document.getElementById('end-sessions').textContent = sessionCount;
+      document.getElementById('end-time').textContent = timerTotal / 60;
+      document.getElementById('end-modal').classList.add('show');
+    }
+  }, 1000);
+}
+function pauseTimer() {
+  timerRunning = false;
+  clearInterval(timerInterval);
+  document.getElementById('timer-start-btn').textContent = 'Resume';
+}
+function resetTimer() {
+  pauseTimer();
+  timerSeconds = timerTotal;
+  document.getElementById('timer-start-btn').textContent = 'Start';
+  updateTimerDisplay();
+}
+function updateTimerDisplay() {
+  const m = Math.floor(timerSeconds / 60);
+  const s = timerSeconds % 60;
+  document.getElementById('timer-display').textContent = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+  const pct = (timerSeconds / timerTotal) * 100;
+  document.getElementById('timer-progress-fill').style.width = pct + '%';
+}
+function setPomLength(mins, btn) {
+  document.querySelectorAll('[id^=pom-]').forEach(b => b.style.background = '');
+  btn.style.background = 'var(--gold)'; btn.style.color = '#1a1208'; btn.style.borderColor = 'var(--gold)';
+  resetTimer();
+  timerTotal = mins * 60; timerSeconds = timerTotal;
+  updateTimerDisplay();
+}
+function nextSession() {
+  sessionCount++;
+  timerSeconds = timerTotal;
+  document.getElementById('session-counter').textContent = `Session ${sessionCount} of ${totalSessions}`;
+  document.getElementById('end-modal').classList.remove('show');
+  updateTimerDisplay();
+  startTimer();
+}
+
+// ─── BREAK ───
+function startBreak() {
+  if (timerRunning) pauseTimer();
+  breakSeconds = 5 * 60;
+  document.getElementById('break-modal').classList.add('show');
+  document.getElementById('break-btn').textContent = '☕ On Break';
+  // mark my tile
+  const myTile = document.querySelector('.my-tile');
+  if(myTile) myTile.classList.add('on-break');
+  breakInterval = setInterval(() => {
+    breakSeconds--;
+    const m = Math.floor(breakSeconds/60);
+    const s = breakSeconds % 60;
+    document.getElementById('break-countdown').textContent = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+    document.getElementById('break-progress').style.width = ((breakSeconds/(5*60))*100)+'%';
+    if(breakSeconds <= 0) { endBreakEarly(); }
+  }, 1000);
+}
+function endBreakEarly() {
+  clearInterval(breakInterval);
+  document.getElementById('break-modal').classList.remove('show');
+  document.getElementById('break-btn').textContent = '☕ Break';
+  const myTile = document.querySelector('.my-tile');
+  if(myTile) myTile.classList.remove('on-break');
+}
+
+// ─── MIC/CAM ───
+function toggleMic() {
+  micOn = !micOn;
+  document.getElementById('mic-btn').textContent = micOn ? '🎙' : '🔇';
+  document.getElementById('mic-btn').style.opacity = micOn ? '1' : '0.5';
+}
+function toggleCam() {
+  camOn = !camOn;
+  document.getElementById('cam-btn').textContent = camOn ? '📷' : '🚫';
+  document.getElementById('cam-btn').style.opacity = camOn ? '1' : '0.5';
+}
+
+// ─── BUDDY REQUESTS ───
+function showBuddyNotif() {
+  const r = MEMBERS[Math.floor(Math.random() * MEMBERS.length)];
+  document.getElementById('notif-title').textContent = `${r.name} wants to connect`;
+  document.getElementById('notif-body').textContent = `They're studying ${r.subject}. Accept to open a private chat?`;
+  document.getElementById('buddy-notif').classList.add('show');
+}
+function sendBuddyReq(name) {
+  alert(`Request sent to ${name}! They'll see a notification to accept or decline.`);
+}
+function acceptBuddy() {
+  closeNotif('buddy-notif');
+  messages.push({ author:'Study Buddy', text:'Hey! Great to study together 📚', me:false });
+  switchTab('chat', document.querySelectorAll('.side-tab')[2]);
+}
+function declineBuddy() { closeNotif('buddy-notif'); }
+function closeNotif(id) { document.getElementById(id).classList.remove('show'); }
+
+function voteExtend() {
+  document.getElementById('extend-notif').classList.add('show');
+}
+
+// ─── THEME ───
+function setTheme(theme, el) {
+  document.querySelectorAll('.theme-option').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  document.body.className = theme === 'default' ? '' : `theme-${theme}`;
+}
+
+// ─── WEATHER ───
+function loadWeather() {
+  const conditions = [
+    { icon:'☀️', temp:28, desc:'Clear skies', city:'Your location' },
+    { icon:'🌤', temp:22, desc:'Partly cloudy', city:'Your location' },
+    { icon:'🌧', temp:18, desc:'Light rain', city:'Your location' },
+    { icon:'⛅', temp:25, desc:'Mostly cloudy', city:'Your location' },
+  ];
+  const c = conditions[Math.floor(Math.random() * conditions.length)];
+  setTimeout(() => {
+    document.getElementById('weather-icon').textContent = c.icon;
+    document.getElementById('weather-temp').textContent = `${c.temp}°C`;
+    document.getElementById('weather-desc').textContent = c.desc;
+    document.getElementById('weather-city').textContent = c.city;
+  }, 800);
+}
+
+// ─── DASHBOARD WEEK BARS ───
+function renderWeekBars() {
+  const max = Math.max(...WEEK_HOURS);
+  const days = ['M','T','W','T','F','S','S'];
+  document.getElementById('week-bars').innerHTML = WEEK_HOURS.map((h, i) => {
+    const pct = (h / max) * 100;
+    const isToday = i === 4;
+    return `<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;">
+      <div style="width:100%;height:${pct}%;background:${isToday?'var(--gold)':'var(--card2)'};border:1px solid ${isToday?'var(--gold)':'var(--border)'};border-radius:3px;min-height:4px;transition:height 0.5s ease;"></div>
+    </div>`;
+  }).join('');
+}
+
+// ─── LIVE COUNTER ANIMATION ───
+let liveCount = 247;
+setInterval(() => {
+  liveCount += Math.floor(Math.random() * 5) - 2;
+  liveCount = Math.max(220, Math.min(280, liveCount));
+  const el = document.getElementById('live-count');
+  if(el) el.textContent = liveCount;
+}, 3000);
+</script>
+<script src="/socket.io/socket.io.js"></script>
+<script src="/app.js"></script>
+</body>
+</html>

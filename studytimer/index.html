@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Coffee & Concepts Studio</title>
+  
+  <!-- Google Fonts: Inter and Outfit -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@200;400;600;800&display=swap" rel="stylesheet">
+  
+  <!-- Phosphor Icons (Premium Minimal Icons) -->
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Custom Background -->
+  <div class="background" id="background"></div>
+  <div class="background-overlay"></div>
+
+  <!-- Interface Container -->
+  <div class="app-container">
+    
+    <!-- Top Navigation -->
+    <header class="top-nav glass-panel">
+      <div class="brand">
+        <i class="ph ph-coffee"></i>
+        <span>Coffee & Concepts</span>
+      </div>
+      <div class="top-right-controls">
+        <button class="icon-button" onclick="toggleTheme()" title="Toggle Theme" id="theme-toggle">
+          <i class="ph ph-moon"></i>
+        </button>
+        <button class="icon-button" onclick="toggleFullscreen()" title="Fullscreen">
+          <i class="ph ph-arrows-out"></i>
+        </button>
+        <button class="icon-button" id="hamburger" onclick="toggleMenu()" title="Toggle Tools">
+          <i class="ph ph-squares-four"></i>
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Workspace -->
+    <main class="workspace">
+      <!-- Central Focus Timer with Progress Circle -->
+      <div class="timer-centerpiece" id="main-timer-container">
+         <div class="progress-circle" id="progress-circle">
+           <svg viewBox="0 0 120 120">
+             <circle class="progress-bg" cx="60" cy="60" r="52"></circle>
+             <circle class="progress-fill" cx="60" cy="60" r="52" id="progress-fill"></circle>
+           </svg>
+         </div>
+         <h1 class="main-timer-time" id="main-timer">00:00:00</h1>
+         
+         <!-- Pomodoro Presets -->
+         <div class="preset-buttons">
+           <button class="preset-btn" data-time="1500">25m</button>
+           <button class="preset-btn" data-time="3000">50m</button>
+           <button class="preset-btn" data-time="900">15m</button>
+         </div>
+         
+         <div class="timer-controls glass-panel" id="main-timer-controls">
+            <input class="glass-input" type="text" id="user-time" placeholder="HH:MM:SS or MM:SS" aria-label="Set Timer">
+            <div class="button-group">
+                <button class="glass-button primary" onclick="startMainTimerFromInput()"><i class="ph-fill ph-play"></i> Start focus</button>
+                <button class="glass-button" onclick="stopMainTimer()"><i class="ph-fill ph-pause"></i> Pause</button>
+                <button class="glass-button danger" onclick="resetMainTimer()"><i class="ph-fill ph-stop"></i></button>
+            </div>
+            <div class="slider-group">
+              <i class="ph ph-text-t"></i>
+              <span id="font-size-label">120px</span>
+              <input type="range" id="font-size-slider" min="40" max="250" value="120" class="glass-slider">
+            </div>
+            <div class="streak-display" id="streak-display">
+              <i class="ph ph-fire-simple"></i> Streak: <span id="streak-count">0</span> days
+            </div>
+         </div>
+      </div>
+    </main>
+
+    <!-- Right Sidebar Dock For Tools -->
+    <aside class="sidebar glass-panel hide" id="menu-options">
+      
+      <!-- Toolbar Icons -->
+      <div class="sidebar-header">
+         <span>Toolkit</span>
+         <div class="tool-toggles">
+           <button class="toggle-btn" onclick="toggleFeature('stopwatch')" title="Stopwatch"><i class="ph ph-stopwatch"></i></button>
+           <button class="toggle-btn" onclick="toggleFeature('break')" title="Break Timer"><i class="ph ph-coffee"></i></button>
+           <button class="toggle-btn" onclick="toggleFeature('bg')" title="Background"><i class="ph ph-image"></i></button>
+           <button class="toggle-btn" onclick="toggleFeature('music')" title="Music"><i class="ph ph-music-notes"></i></button>
+           <button class="toggle-btn" onclick="toggleFeature('color')" title="Color"><i class="ph ph-palette"></i></button>
+           <button class="toggle-btn" onclick="toggleFeature('weather')" title="Weather"><i class="ph ph-cloud-sun"></i></button>
+           <button class="toggle-btn active" onclick="toggleFeature('main-timer')" title="Timer Controls"><i class="ph ph-hourglass-medium"></i></button>
+         </div>
+      </div>
+
+      <div class="features-scroll" id="features-container">
+        
+        <!-- Stopwatch Tool -->
+        <div class="feature-card hidden" id="stopwatch">
+          <div class="card-header"><i class="ph ph-stopwatch"></i> <span>Stopwatch</span></div>
+          <div class="led-display" id="stopwatch-display">00:00:00</div>
+          <div class="button-group mini">
+            <button class="glass-button" onclick="startStopwatch()"><i class="ph-fill ph-play"></i></button>
+            <button class="glass-button" onclick="stopStopwatch()"><i class="ph-fill ph-pause"></i></button>
+            <button class="glass-button" onclick="resetStopwatch()"><i class="ph-fill ph-stop"></i></button>
+          </div>
+        </div>
+
+        <!-- Break Timer Tool -->
+        <div class="feature-card hidden" id="break-timer">
+          <div class="card-header"><i class="ph ph-coffee"></i> <span>Break Mode</span></div>
+          <div class="led-display" id="break-timer-display">05:00</div>
+          <div class="button-group mini">
+            <button class="glass-button" onclick="startBreakTimer()"><i class="ph-fill ph-play"></i></button>
+            <button class="glass-button" onclick="stopBreakTimer()"><i class="ph-fill ph-pause"></i></button>
+            <button class="glass-button" onclick="resetBreakTimer()"><i class="ph-fill ph-stop"></i></button>
+          </div>
+        </div>
+
+        <!-- Background Tool -->
+        <div class="feature-card hidden" id="background-options">
+          <div class="card-header"><i class="ph ph-image"></i> <span>Aesthetics</span></div>
+          <label class="file-upload-label glass-input">
+            <i class="ph ph-upload-simple"></i> Upload Media
+            <input type="file" accept="image/*,video/*" id="upload-background" onchange="uploadBackground()" class="hidden-input">
+          </label>
+          <div class="button-group mini mt-2">
+            <button class="glass-button" onclick="stretchBackground(true)">Fill</button>
+            <button class="glass-button" onclick="stretchBackground(false)">Fit</button>
+          </div>
+        </div>
+
+        <!-- Music Tool -->
+        <div class="feature-card hidden" id="music-options">
+          <div class="card-header"><i class="ph ph-music-notes"></i> <span>Focus Playlist</span></div>
+          <label class="file-upload-label glass-input">
+            <i class="ph ph-folder-open"></i> Choose Audio
+            <input type="file" accept="audio/*" id="upload-music" onchange="uploadMusic()" class="hidden-input">
+          </label>
+          <div class="button-group mini mt-2">
+            <button class="glass-button" onclick="playMusic()"><i class="ph-fill ph-play"></i></button>
+            <button class="glass-button" onclick="pauseMusic()"><i class="ph-fill ph-pause"></i></button>
+          </div>
+        </div>
+
+        <!-- Timer Color Tool -->
+        <div class="feature-card hidden" id="color-picker">
+          <div class="card-header"><i class="ph ph-palette"></i> <span>Timer Color</span></div>
+          <div class="color-picker-wrapper">
+             <input type="color" id="timer-color" onchange="changeTimerColor()" value="#ffffff" class="glass-color-picker">
+          </div>
+        </div>
+
+        <!-- Weather Tool -->
+        <div class="feature-card hidden" id="weather-tool">
+          <div class="card-header"><i class="ph ph-cloud-sun"></i> <span>Local Weather</span></div>
+          <div id="weather" class="weather-content">
+             <div class="loading-state"><i class="ph ph-spinner-gap ph-spin"></i> Enter API key for weather...</div>
+             <input type="text" id="weather-api-key" class="glass-input mt-2" placeholder="WeatherAPI.com key">
+             <button class="glass-button primary mt-2" onclick="fetchWeather()">Load Weather</button>
+          </div>
+        </div>
+
+      </div>
+    </aside>
+
+  </div>
+
+  <script src="scripts.js"></script>
+</body>
+</html>
