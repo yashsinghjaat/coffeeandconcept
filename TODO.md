@@ -8,5 +8,7 @@
 5. ✅ Edit styles.css: Added light theme support, progress circle visuals, responsive tweaks.
 6. ✅ Test: Opened index.html in default browser.
 7. ✅ Complete task.
+8. Update Backend
+
 
 **All steps finished!** Project enhanced and ready.
